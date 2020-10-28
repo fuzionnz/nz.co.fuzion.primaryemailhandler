@@ -147,7 +147,7 @@ function primaryemailhandler_civicrm_pre($op, $objectName, $id, &$params) {
     $primary = $params['is_primary'] ?? 0;
 
     //If the updated email is on hold, unhold it if the value is updated.
-    if (!empty($params['id']) && empty($params['on_hold'])) {
+    if (!empty($params['id'])) {
       $existingEmailValues = civicrm_api3('Email', 'getsingle', [
         'id' => $params['id'],
       ]);
@@ -157,7 +157,7 @@ function primaryemailhandler_civicrm_pre($op, $objectName, $id, &$params) {
       if (!$contactID && !empty($existingEmailValues['contact_id'])) {
         $contactID = $existingEmailValues['contact_id'];
       }
-      if (!empty($existingEmailValues['on_hold']) && !empty($existingEmailValues['email'])
+      if (empty($params['on_hold']) && !empty($existingEmailValues['on_hold']) && !empty($existingEmailValues['email'])
         && !empty($params['email']) && $existingEmailValues['email'] != $params['email']) {
 
         $params['on_hold'] = 0;
